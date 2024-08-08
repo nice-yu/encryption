@@ -146,7 +146,7 @@ echo "Decrypted data: $decryptedRSA\n";
 
 Please note that ECB mode is a basic encryption mode that encrypts each data block independently without considering the relationship between blocks. This can lead to security issues, so ECB mode is not recommended for practical applications. In actual applications, it is recommended to use more secure encryption modes such as CBC, CTR, or GCM.
 
-### Supported Encryption Methods Table
+### Encryption Algorithm Comparison Table
 | Encryption Method | Key Length | IV Length |
 |-------------------|------------|-----------|
 | rsa               | pem        | pem       |
