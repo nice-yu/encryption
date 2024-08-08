@@ -35,6 +35,62 @@ class RSAEncryptorTest extends TestCase
         $this->privateKey = $privateKey;
     }
 
+    public function testConstructorWithValidKeys()
+    {
+        $rsaEncryptor = new RSAEncryptor($this->publicKey, $this->privateKey);
+        $this->assertInstanceOf(RSAEncryptor::class, $rsaEncryptor);
+    }
+
+    public function testConstructorWithInvalidPublicKey()
+    {
+        $this->expectException(EncryptionException::class);
+        new RSAEncryptor('invalid_public_key', $this->privateKey);
+    }
+
+    public function testConstructorWithInvalidPrivateKey()
+    {
+        $this->expectException(EncryptionException::class);
+        new RSAEncryptor($this->publicKey, 'invalid_private_key');
+    }
+
+    public function testEncryptWithInvalidPublicKey()
+    {
+        $invalidPublicKey = "-----BEGIN PUBLIC KEY-----
+invalid_key
+-----END PUBLIC KEY-----";
+
+        $this->expectException(EncryptionException::class);
+        $rsaEncryptor = new RSAEncryptor($invalidPublicKey, $this->privateKey);
+        $rsaEncryptor->encrypt("test message");
+    }
+
+    public function testDecryptWithInvalidPrivateKey()
+    {
+        $rsaEncryptor = new RSAEncryptor($this->publicKey, $this->privateKey);
+        $plaintext = "This is a test message.";
+        $encrypted = $rsaEncryptor->encrypt($plaintext);
+        $this->assertNotNull($encrypted);
+
+        $invalidPrivateKey = "-----BEGIN PRIVATE KEY-----
+invalid_key
+-----END PRIVATE KEY-----";
+
+        $this->expectException(EncryptionException::class);
+        $invalidEncryptor = new RSAEncryptor($this->publicKey, $invalidPrivateKey);
+        $invalidEncryptor->decrypt($encrypted);
+    }
+
+    public function testEncryptAndDecrypt()
+    {
+        $rsaEncryptor = new RSAEncryptor($this->publicKey, $this->privateKey);
+        $plaintext = "This is a test message.";
+        $encrypted = $rsaEncryptor->encrypt($plaintext);
+        $this->assertNotNull($encrypted);
+
+        $decrypted = $rsaEncryptor->decrypt($encrypted);
+        $this->assertEquals($plaintext, $decrypted);
+    }
+
     public function testEncryptAndDecryptBase64()
     {
         $encryptor = new RSAEncryptor($this->publicKey, $this->privateKey, RSAEncryptor::OUTPUT_BASE64);

@@ -1,3 +1,5 @@
+> [简体中文](README.zh-CN.md) | [English](README.md)
+
 ## 概述
 
 `niceyu/encryption` 是一个简单而强大的 PHP 加密库，支持多种加密算法，包括 AES 和 RSA。它能够处理不同格式的输出，如 base64 和 hex。这个库旨在为开发者提供一个简便的接口来实现数据的加密和解密，确保数据传输的安全性。

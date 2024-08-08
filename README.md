@@ -1,3 +1,5 @@
+> [简体中文](README.zh-CN.md) | [English](README.md)
+
 # Overview
 
 `niceyu/encryption` is a simple yet powerful PHP encryption library that supports multiple encryption algorithms, including AES and RSA. It can handle different output formats such as base64 and hex. This library aims to provide developers with an easy-to-use interface for data encryption and decryption, ensuring secure data transmission.
