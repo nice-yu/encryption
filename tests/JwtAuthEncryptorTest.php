@@ -7,7 +7,7 @@ use NiceYu\Encryption\Dto\PayloadDto;
 use NiceYu\Encryption\Dto\JwtAuthDto;
 use NiceYu\Encryption\Encryptors\Encryptor;
 use NiceYu\Encryption\Encryptors\RSAEncryptor;
-use NiceYu\Encryption\Product\JwtAuthEncryptor;
+use NiceYu\Encryption\Encryptors\JwtAuthEncryptor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \NiceYu\Encryption\Encryptors\RSAEncryptor
  * @covers \NiceYu\Encryption\Encryptors\AbstractEncryptor
  * @covers \NiceYu\Encryption\Exceptions\EncryptionException
- * @covers \NiceYu\Encryption\Product\JwtAuthEncryptor
+ * @covers \NiceYu\Encryption\Encryptors\JwtAuthEncryptor
  * @covers \NiceYu\Encryption\Encryptors\Encryptor
  */
 class JwtAuthEncryptorTest extends TestCase

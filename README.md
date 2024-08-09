@@ -1,236 +1,83 @@
+# Encryption
+
 > [简体中文](README.zh-CN.md) | [English](README.md)
 
-# Overview
+## 概述
 
-`niceyu/encryption` is a simple yet powerful PHP encryption library that supports multiple encryption algorithms, including AES and RSA. It can handle different output formats such as base64 and hex. This library aims to provide developers with an easy-to-use interface for data encryption and decryption, ensuring secure data transmission.
+`niceyu/encryption` 是一个简单而强大的 PHP 加密库，支持多种加密算法，包括 OpenSSL(全部) 和 RSA。它能够处理不同格式的输出，如 base64 和 hex。这个库旨在为开发者提供一个简便的接口来实现数据的加密和解密，确保数据传输的安全性。
 
-## Installation
 
-Install this library in your project using Composer:
+## 安装
+
+在项目中使用 Composer 安装此库：
 ```bash
 composer require niceyu/encryption
 ```
 
-## Usage
+## 使用方法
+| 加密器               | 简体中文                    | English              |
+|-------------------|-------------------------|----------------------|
+| RSAEncryptor      | [简体中文](README.zh-CN.md) | [English](README.md) |
+| OpensslEncryptor  | [简体中文](README.zh-CN.md) | [English](README.md) |
+| RandomEncryptor   | [简体中文](README.zh-CN.md) | [English](README.md) |
+| PasswordEncryptor | [简体中文](README.zh-CN.md) | [English](README.md) |
+| JwtAuthEncryptor  | [简体中文](README.zh-CN.md) | [English](README.md) |
 
-### AES Encryption
-- `AES` is a symmetric encryption algorithm that supports multiple modes. For other modes, please see the [Encryption Algorithm Comparison Table](#encryption-algorithm-comparison-table).
-- Below is an example of how to use the `AES-128-CBC` mode for encryption and decryption.
+## 单元测试
+```shell
+PHPUnit 9.6.20 by Sebastian Bergmann and contributors.
 
-```php
-use NiceYu\Encryption\Encryptors\Encryptor;
+Runtime:       PHP 7.4
+Configuration: /var/www/packages/encryption/phpunit.xml
 
-$cipher = 'AES-128-CBC';
-$key = 'thisisaverysecurekey1234';
-$iv = '1234567890123456';
+Encryptor (NiceYu\Encryption\Tests\Encryptor)
+✔ Encrypt and decrypt base 64 [5.43 ms]
+✔ Encrypt and decrypt hex [0.35 ms]
+✔ Invalid cipher [0.31 ms]
+✔ Encrypt not base 64 hex [0.54 ms]
+✔ Encrypt not supported [0.58 ms]
+✔ Decrypt not supported [0.22 ms]
+✔ Decrypt failed [27.37 ms]
 
-// Create Encryptor instance
-$encryptor = new Encryptor($cipher, $key, $iv);
+Functions (NiceYu\Encryption\Tests\Functions)
+✔ Is encrypt with valid cipher [1.49 ms]
+✔ Is encrypt with invalid cipher [1.19 ms]
+✔ Encrypt flex key with valid cipher [0.13 ms]
+✔ Encrypt flex key with invalid cipher [0.15 ms]
+✔ Encrypt flex key with short key [0.13 ms]
+✔ Encrypt flex key with long key [0.30 ms]
+✔ Encrypt flex iv with valid cipher [0.13 ms]
+✔ Encrypt flex iv with invalid cipher [0.13 ms]
+✔ Encrypt flex iv with short iv [0.13 ms]
+✔ Encrypt flex iv with long iv [0.17 ms]
 
-// Encrypt data
-$plaintext = 'Hello, OpenSSL!';
-$encrypted = $encryptor->encrypt($plaintext);
+Jwt Auth Encryptor (NiceYu\Encryption\Tests\JwtAuthEncryptor)
+✔ Aes encrypt and decrypt [313.23 ms]
+✔ Aes decrypt with expired token [88.26 ms]
+✔ Rsa encrypt and decrypt [125.75 ms]
+✔ Rsa decrypt with expired token [101.82 ms]
 
-// Decrypt data
-$decrypted = $encryptor->decrypt($encrypted);
+Password Encryptor (NiceYu\Encryption\Tests\PasswordEncryptor)
+✔ Constructor with valid encryptor [76.88 ms]
+✔ Rsa encrypt password [31.48 ms]
+✔ Rsa decrypt password [64.90 ms]
+✔ Aes encrypt password [180.93 ms]
+✔ Aes decrypt password [72.77 ms]
+✔ Encrypt password failure [105.62 ms]
+✔ Decrypt password failure [110.38 ms]
 
-echo "Encrypted data: $encrypted\n";
-echo "Decrypted data: $decrypted\n";
+RSAEncryptor (NiceYu\Encryption\Tests\RSAEncryptor)
+✔ Constructor with valid keys [84.94 ms]
+✔ Constructor with invalid public key [112.06 ms]
+✔ Constructor with invalid private key [147.95 ms]
+✔ Encrypt with invalid public key [129.42 ms]
+✔ Decrypt with invalid private key [167.48 ms]
+✔ Encrypt and decrypt [135.20 ms]
+✔ Encrypt and decrypt base 64 [66.21 ms]
+✔ Encrypt and decrypt hex [66.27 ms]
+✔ Invalid public key [175.64 ms]
+✔ Invalid private key [132.21 ms]
 ```
+## 许可证
 
-### RSA Encryption
-
-`RSA` is an asymmetric encryption algorithm commonly used to encrypt small chunks of data or to encrypt symmetric keys.
-
-```php
-use NiceYu\Encryption\Encryptors\RSAEncryptor;
-
-$publicKey = file_get_contents('path/to/public_key.pem');
-$privateKey = file_get_contents('path/to/private_key.pem');
-
-// Create RSAEncryptor instance
-$encryptor = new RSAEncryptor($publicKey, $privateKey);
-
-// Encrypt data
-$plaintext = 'Hello, RSA!';
-$encrypted = $encryptor->encrypt($plaintext);
-
-// Decrypt data
-$decrypted = $encryptor->decrypt($encrypted);
-
-echo "Encrypted data: $encrypted\n";
-echo "Decrypted data: $decrypted\n";
-```
-
-## Function Descriptions
-
-### is_encrypt
-
-Checks if the given encryption algorithm is valid.
-
-```php
-function is_encrypt(string $cipher): bool
-```
-
-**Parameters**
-- `cipher` (string): Name of the encryption algorithm. See [Encryption Algorithm Comparison Table](#encryption-algorithm-comparison-table) for more details.
-
-**Returns**
-- `bool`: Returns `true` if the encryption algorithm is valid, otherwise `false`.
-
-### encrypt_flex_key
-
-Automatically truncates the encryption key based on the input encryption algorithm.
-
-```php
-function encrypt_flex_key(string $cipher, string $data): string
-```
-
-**Parameters**
-- `cipher` (string): Name of the encryption algorithm.
-- `data` (string): Key data. If the exact length is unknown, provide a longer string; it will be automatically truncated.
-
-**Returns**
-- `string`: The generated encryption key.
-
-### encrypt_flex_iv
-
-Automatically truncates the initialization vector (IV) based on the input encryption algorithm.
-
-```php
-function encrypt_flex_iv(string $cipher, string $data): string
-```
-
-**Parameters**
-- `cipher` (string): Name of the encryption algorithm.
-- `data` (string): Initialization vector data. If the exact length is unknown, provide a longer string; it will be automatically truncated.
-
-**Returns**
-- `string`: The generated initialization vector.
-
-## Example Code
-
-Below is a complete example demonstrating how to use the `niceyu/encryption` library for AES and RSA encryption and decryption operations.
-
-```php
-require 'vendor/autoload.php';
-
-use NiceYu\Encryption\Encryptors\Encryptor;
-use NiceYu\Encryption\Encryptors\RSAEncryptor;
-
-// AES encryption and decryption example
-$cipher = 'AES-128-CBC';
-$key = 'thisisaverysecurekey1234';
-$iv = '1234567890123456';
-$encryptor = new Encryptor($cipher, $key, $iv);
-
-$plaintext = 'Hello, AES!';
-$encrypted = $encryptor->encrypt($plaintext);
-$decrypted = $encryptor->decrypt($encrypted);
-
-echo "Encrypted data: $encrypted\n";
-echo "Decrypted data: $decrypted\n";
-
-// RSA encryption and decryption example
-$publicKey = file_get_contents('path/to/public_key.pem');
-$privateKey = file_get_contents('path/to/private_key.pem');
-$rsaEncryptor = new RSAEncryptor($publicKey, $privateKey);
-
-$plaintextRSA = 'Hello, RSA!';
-$encryptedRSA = $rsaEncryptor->encrypt($plaintextRSA);
-$decryptedRSA = $rsaEncryptor->decrypt($encryptedRSA);
-
-echo "Encrypted data: $encryptedRSA\n";
-echo "Decrypted data: $decryptedRSA\n";
-```
-
-Please note that ECB mode is a basic encryption mode that encrypts each data block independently without considering the relationship between blocks. This can lead to security issues, so ECB mode is not recommended for practical applications. In actual applications, it is recommended to use more secure encryption modes such as CBC, CTR, or GCM.
-
-### Encryption Algorithm Comparison Table
-| Encryption Method | Key Length | IV Length |
-|-------------------|------------|-----------|
-| rsa               | pem        | pem       |
-| aes-128-cbc       | 16         | 16        |
-| aes-128-cfb       | 16         | 16        |
-| aes-128-cfb1      | 16         | 16        |
-| aes-128-cfb8      | 16         | 16        |
-| aes-128-ctr       | 16         | 16        |
-| aes-128-ofb       | 16         | 16        |
-| aes-128-wrap-pad  | 16         | 4         |
-| aes-128-xts       | 32         | 16        |
-| aes-192-cbc       | 24         | 16        |
-| aes-192-cfb       | 24         | 16        |
-| aes-192-cfb1      | 24         | 16        |
-| aes-192-cfb8      | 24         | 16        |
-| aes-192-ctr       | 24         | 16        |
-| aes-192-ofb       | 24         | 16        |
-| aes-192-wrap-pad  | 24         | 4         |
-| aes-256-cbc       | 32         | 16        |
-| aes-256-cfb       | 32         | 16        |
-| aes-256-cfb1      | 32         | 16        |
-| aes-256-cfb8      | 32         | 16        |
-| aes-256-ctr       | 32         | 16        |
-| aes-256-ofb       | 32         | 16        |
-| aes-256-wrap-pad  | 32         | 4         |
-| aes-256-xts       | 32         | 16        |
-| aria-128-cbc      | 16         | 16        |
-| aria-128-cfb      | 16         | 16        |
-| aria-128-cfb1     | 16         | 16        |
-| aria-128-cfb8     | 16         | 16        |
-| aria-128-ctr      | 16         | 16        |
-| aria-128-ofb      | 16         | 16        |
-| aria-192-cbc      | 24         | 16        |
-| aria-192-cfb      | 24         | 16        |
-| aria-192-cfb1     | 24         | 16        |
-| aria-192-cfb8     | 24         | 16        |
-| aria-192-ctr      | 24         | 16        |
-| aria-192-ofb      | 24         | 16        |
-| aria-256-cbc      | 32         | 16        |
-| aria-256-cfb      | 32         | 16        |
-| aria-256-cfb1     | 32         | 16        |
-| aria-256-cfb8     | 32         | 16        |
-| aria-256-ctr      | 32         | 16        |
-| aria-256-ofb      | 32         | 16        |
-| camellia-128-cbc  | 16         | 16        |
-| camellia-128-cfb  | 16         | 16        |
-| camellia-128-cfb1 | 16         | 16        |
-| camellia-128-cfb8 | 16         | 16        |
-| camellia-128-ctr  | 16         | 16        |
-| camellia-128-ofb  | 16         | 16        |
-| camellia-192-cbc  | 24         | 16        |
-| camellia-192-cfb  | 24         | 16        |
-| camellia-192-cfb1 | 24         | 16        |
-| camellia-192-cfb8 | 24         | 16        |
-| camellia-192-ctr  | 24         | 16        |
-| camellia-192-ofb  | 24         | 16        |
-| camellia-256-cbc  | 32         | 16        |
-| camellia-256-cfb  | 32         | 16        |
-| camellia-256-cfb1 | 32         | 16        |
-| camellia-256-cfb8 | 32         | 16        |
-| camellia-256-ctr  | 32         | 16        |
-| camellia-256-ofb  | 32         | 16        |
-| chacha20          | 32         | 16        |
-| des-ede-cbc       | 16         | 8         |
-| des-ede-cfb       | 16         | 8         |
-| des-ede-ofb       | 16         | 8         |
-| des-ede3-cbc      | 24         | 8         |
-| des-ede3-cfb      | 24         | 8         |
-| des-ede3-cfb1     | 24         | 8         |
-| des-ede3-cfb8     | 24         | 8         |
-| des-ede3-ofb      | 24         | 8         |
-| sm4-cbc           | 16         | 16        |
-| sm4-cfb           | 16         | 16        |
-| sm4-ctr           | 16         | 16        |
-| sm4-ofb           | 16         | 16        |
-| aria-256-ecb      | 32         | NOT       |
-| camellia-128-ecb  | 16         | NOT       |
-| camellia-192-ecb  | 24         | NOT       |
-| camellia-256-ecb  | 32         | NOT       |
-| des-ede-ecb       | 16         | NOT       |
-| sm4-ecb           | 16         | NOT       |
-| des-ede3-ecb      | 24         | NOT       |
-| aes-128-ecb       | 16         | NOT       |
-| aes-192-ecb       | 24         | NOT       |
-| aes-256-ecb       | 32         | NOT       |
-| aria-128-ecb      | 16         | NOT       |
-| aria-192-ecb      | 24         | NOT       |
+本项目采用 [MIT 许可证](LICENSE) 开源。详细信息请查看 LICENSE 文件。

@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace NiceYu\Encryption\Product;
+namespace NiceYu\Encryption\Encryptors;
 
 use JMS\Serializer\SerializerBuilder;
 use NiceYu\Encryption\Dto\JwtAuthDto;
 use NiceYu\Encryption\Dto\PayloadDto;
-use NiceYu\Encryption\Encryptors\EncryptorInterface;
 
 /**
  * class JwtAuthEncryptor

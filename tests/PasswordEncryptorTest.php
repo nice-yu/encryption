@@ -7,7 +7,7 @@ namespace NiceYu\Encryption\Tests;
 use NiceYu\Encryption\Encryptors\Encryptor;
 use NiceYu\Encryption\Encryptors\RSAEncryptor;
 use PHPUnit\Framework\TestCase;
-use NiceYu\Encryption\Product\PasswordEncryptor;
+use NiceYu\Encryption\Encryptors\PasswordEncryptor;
 use NiceYu\Encryption\Exceptions\EncryptionException;
 
 /**
@@ -16,7 +16,7 @@ use NiceYu\Encryption\Exceptions\EncryptionException;
  * @covers \NiceYu\Encryption\Encryptors\RSAEncryptor
  * @covers \NiceYu\Encryption\Encryptors\AbstractEncryptor
  * @covers \NiceYu\Encryption\Exceptions\EncryptionException
- * @covers \NiceYu\Encryption\Product\PasswordEncryptor
+ * @covers \NiceYu\Encryption\Encryptors\PasswordEncryptor
  * @covers \NiceYu\Encryption\Encryptors\Encryptor
  */
 class PasswordEncryptorTest extends TestCase

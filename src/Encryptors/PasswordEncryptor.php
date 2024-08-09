@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace NiceYu\Encryption\Product;
+namespace NiceYu\Encryption\Encryptors;
 
 use InvalidArgumentException;
-use NiceYu\Encryption\Encryptors\EncryptorInterface;
 
 /**
  * Class PasswordEncryptor
