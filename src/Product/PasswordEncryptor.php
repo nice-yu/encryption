@@ -31,7 +31,7 @@ class PasswordEncryptor
      * @param string $password The password to encrypt.
      * @return string The encrypted password.
      */
-    public function encryptPassword(string $password): string
+    public function encrypt(string $password): string
     {
         return $this->encryptor->encrypt($password);
     }
@@ -42,7 +42,7 @@ class PasswordEncryptor
      * @param string $encryptedPassword The encrypted password to decrypt.
      * @return string The decrypted password.
      */
-    public function decryptPassword(string $encryptedPassword): string
+    public function decrypt(string $encryptedPassword): string
     {
         return $this->encryptor->decrypt($encryptedPassword);
     }

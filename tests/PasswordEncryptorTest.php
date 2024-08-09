@@ -54,7 +54,7 @@ class PasswordEncryptorTest extends TestCase
     public function testRsaEncryptPassword()
     {
         $password = "my_secure_password";
-        $encryptedPassword = $this->passwordEncryptor->encryptPassword($password);
+        $encryptedPassword = $this->passwordEncryptor->encrypt($password);
         $this->assertNotNull($encryptedPassword);
         $this->assertNotEquals($password, $encryptedPassword);
     }
@@ -62,8 +62,8 @@ class PasswordEncryptorTest extends TestCase
     public function testRsaDecryptPassword()
     {
         $password = "my_secure_password";
-        $encryptedPassword = $this->passwordEncryptor->encryptPassword($password);
-        $decryptedPassword = $this->passwordEncryptor->decryptPassword($encryptedPassword);
+        $encryptedPassword = $this->passwordEncryptor->encrypt($password);
+        $decryptedPassword = $this->passwordEncryptor->decrypt($encryptedPassword);
         $this->assertEquals($password, $decryptedPassword);
     }
 
@@ -76,7 +76,7 @@ class PasswordEncryptorTest extends TestCase
         $passwordEncryptor = new PasswordEncryptor($aesEncryptor);
 
         $password = "my_secure_password";
-        $encryptedPassword = $passwordEncryptor->encryptPassword($password);
+        $encryptedPassword = $passwordEncryptor->encrypt($password);
         $this->assertNotNull($encryptedPassword);
         $this->assertNotEquals($password, $encryptedPassword);
     }
@@ -90,8 +90,8 @@ class PasswordEncryptorTest extends TestCase
         $passwordEncryptor = new PasswordEncryptor($aesEncryptor);
 
         $password = "my_secure_password";
-        $encryptedPassword = $passwordEncryptor->encryptPassword($password);
-        $decryptedPassword = $passwordEncryptor->decryptPassword($encryptedPassword);
+        $encryptedPassword = $passwordEncryptor->encrypt($password);
+        $decryptedPassword = $passwordEncryptor->decrypt($encryptedPassword);
         $this->assertEquals($password, $decryptedPassword);
     }
 
@@ -103,7 +103,7 @@ class PasswordEncryptorTest extends TestCase
         $invalidPublicKey = "invalid_public_key";
         $rsaEncryptor = new RSAEncryptor($invalidPublicKey, $this->privateKey);
         $passwordEncryptor = new PasswordEncryptor($rsaEncryptor);
-        $passwordEncryptor->encryptPassword("test");
+        $passwordEncryptor->encrypt("test");
     }
 
     public function testDecryptPasswordFailure()
@@ -114,6 +114,6 @@ class PasswordEncryptorTest extends TestCase
         $invalidPrivateKey = "invalid_private_key";
         $rsaEncryptor = new RSAEncryptor($this->publicKey, $invalidPrivateKey);
         $passwordEncryptor = new PasswordEncryptor($rsaEncryptor);
-        $passwordEncryptor->decryptPassword("test");
+        $passwordEncryptor->decrypt("test");
     }
 }

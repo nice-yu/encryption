@@ -24,7 +24,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "jms/serializer": ">=3.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.4",
